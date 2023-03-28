@@ -1,20 +1,23 @@
-from flask import Flask, jsonify, request, redirect, url_for, session
+from flask import Flask, jsonify, request, redirect, url_for, session, render_template, g
+import sqlite3
 
 # __name__ this is a reference to the name of the current module that I worked in (which is app.py)
 app = Flask(__name__)
 app.config['DEBUG'] = True
 app.config['SECRET_KEY'] = 'thisisasecret'
-######### Routing#################
 
+######### Routing#################
 
 # This is the decorator app.route to specify which route you want to write code for
 # in the route: specify the location that you want to use for your route
 # this is a placeholder --> we need to pass it as parameter to the function below
+
+
 @app.route('/', defaults={'name': 'Default'})
 @app.route('/<name>')
 def index(name):
     session['name'] = name
-    return f'<h1>Hello {name}!</h1>'
+    return render_template('home.html', name=name, display=False, myList=['one', 'two', 'three'])
 
 
 @app.route('/home')
@@ -56,11 +59,7 @@ def query():
 # method 1:
 @app.route('/theform')
 def theform():
-    return '''<form action="/process" method="POST">
-                    <input type="text" name="name" placeholder="Enter ur name">
-                    <input type="text" name="location" placeholder="Enter ur location">
-                    <input type="submit" value="Submit"/>
-                </form>'''
+    return render_template('form.html')
 
 
 @app.route('/process', methods=['POST'])

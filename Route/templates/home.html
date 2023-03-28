@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+<!-- title| -->
+{% block title %}Home Page{% endblock %}
+
+<!-- content -->
+{% block content %} {{super()}}
+
+<h1>Hello {{name}}!</h1>
+
+<!-- include another html file here -->
+{% include "include_this.html"%}
+
+<!-- conditional -->
+{% if display %}
+<h2>This is being displayed</h2>
+{% else %}
+<h2>This is not being displayed</h2>
+{% endif %}
+
+<!-- loops -->
+{% for x in myList %}
+<h3>{{ x }}</h3>
+{% endfor %}
+
+<!-- images -->
+<img src="{{url_for('static', filename='imag1.png')}}" />
+
+{% endblock %}

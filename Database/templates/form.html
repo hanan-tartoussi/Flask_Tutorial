@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+<!-- title| -->
+{% block title %}Form{% endblock %}
+
+<!-- content -->
+{% block content %} {{super()}}
+
+<form action="/process" method="POST">
+  <input type="text" name="name" placeholder="Enter ur name" />
+  <input type="text" name="location" placeholder="Enter ur location" />
+  <input type="submit" value="Submit" />
+</form>
+
+{% endblock %}
