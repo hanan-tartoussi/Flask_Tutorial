@@ -4,7 +4,6 @@ import sqlite3
 # __name__ this is a reference to the name of the current module that I worked in (which is app.py)
 app = Flask(__name__)
 app.config['DEBUG'] = True
-app.config['SECRET_KEY'] = 'thisisasecret'
 
 
 def connect_db():
