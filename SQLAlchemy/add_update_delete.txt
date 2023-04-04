@@ -1,0 +1,121 @@
+Without queries:
+
+To insert data into the database:
+------------------------------------
+in the cmd: hanan= Member(username='Hanan', password='password', email='ht@gmail.com', join_date=date.today())
+insert to the member table: db.session.add(hanan)
+commit: db.session.commit()
+
+Update an object:
+------------------
+in the cmd: hanan.password='secret'
+save the change to the database: db.session.commit()
+
+Delete an object:
+------------------
+in the cmd: db.session.delete(hanan)
+db.session.commit()
+
+With Query:
+
+res= Member.query.all() #retrieves all records from the Member table in the database.
+filters:
+---------
+Member.query.filter_by(username='Hanan').first()
+Member.query.filter(Member.username == 'Hanan').first()
+Member.query.filter(Member.username != 'Hanan').all()
+Member.query.filter(Member.username.like('%nan%')) each username has nan in that order should be called by ths filter
+
+filter using in:
+-------------------
+Member.query.filter(Member.username.in_(['Hanan','Farah'])).all()
+
+Not in:
+----------
+Member.query.filter(~Member.username.in_(['Hanan','Farah'])).all() ~: means not in
+
+Adding a member with some null value:
+--------------------------------------
+Karen= Member(username='karen', password='karenpassword')
+db.session.add(Karen)
+db.session.commit()
+
+Filter to null and not null:
+------------------------------
+Member.query.filter(Member.email == None).all()  ==> return : Karen
+Member.query.filter(Member.email != None).all()  ==> return : Karen
+
+and with filters: (3 methods)
+-------------------
+Member.query.filter(Member.username == 'Hanan').filter(Member.password == 'secret').all()
+Member.query.filter(Member.username == 'Hanan', Member.password == 'secret').all()
+Member.query.filter(db.and_(Member.username == 'Hanan', Member.password == 'secret')).all()
+
+or with filters:
+-------------------
+Member.query.filter(db.or_(Member.username == 'Hanan', Member.username == 'karen')).all()
+
+order by:
+----------
+Member.query.order_by(Member.username ).all()
+
+if we want to return some of data not all the data:
+    --> use "limit"
+            Member.query.limit(2).all()
+            Member.query.order_by(Member.username).limit(2).all()
+    --> use "offset"
+            Member.query.affse(1).all() : this will skip over the first and give me everything after that
+            if I want the 3rd result:
+                Member.query.offset(2).limit(1).all()
+
+count the query result:
+-------------------------
+Member.query.count() : tell me the number of result in thet query
+Member.query.filter(db.or_(Member.username == 'Hanan', Member.username == 'Karen')).count()
+
+inequality:
+--------------
+Member.query.filter(Member.id > 3).all()
+
+One to many queries: (between member and order tables)
+--------------------
+1 order can has 1 member, and each member can has many orders
+hanan = Member.query.filter(Member.username == 'Hanan').first()
+order1= Order(price=50, member_id=hanan.id)
+db.session.add(order1)
+db.session.commit()
+
+or order2= Order(price=500, member=hanan)
+db.session.add(order2)
+db.session.commit()
+
+hanan.orders.all() --->  SHOW : [<Order 1>, <Order 2>]
+
+Many to Many queries:
+-----------------------
+Each member can be enrolled in many number of courses
+Each course can has many members 
+The relationship between the member and course table is a mapping table
+the 2 tables are connected by a mapping table representing the enrollment of members in courses
+
+    First create many courses:
+        >>> course1= Course(name='Course One')
+        >>> course2= Course(name='Course Two')
+        >>> course3= Course(name='Course Three')
+        >>> db.session(course1)        
+        >>> db.session.add(course1)
+        >>> db.session.add(course2)
+        >>> db.session.add(course3)
+        >>> db.session.commit()
+        #As I have a backref pointing on the course table : has a virtual list of members 
+        >>> course1.member  --> SHOW []
+    Add member to the courses:
+        >>> hanan = Member.query.filter(Member.username == 'Hanan').first()
+        >>> mona = Member.query.filter(Member.username == 'Mona').first()    
+        >>> course1.member.append(hanan)        
+        >>> course1.member.append(mona)        
+        >>> db.session.commit()
+    See what courses that a member is enrolled in:
+        >>> hanan.courses.all() --> SHOW [<Course 1>]
+    See all the members enrolled in a course 
+        >>> course1.member --> SHOW SHOW [Member Hanan, Member Mona]
