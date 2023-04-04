@@ -1,0 +1,21 @@
+{% from "_renderfields.html" import renderfields %}
+<html>
+  <head>
+    <title>Login Form</title>
+  </head>
+  <body>
+    <h1>The form is below:</h1>
+    <!-- csrf_token: create a token that verify that the form data is coming from the
+    page generated -->
+    <form action="/" method="POST">
+      {{ form.csrf_token }} {{ renderfields(form.username) }}
+      {{renderfields(form.password) }} {{ renderfields(form.age) }}
+      {{renderfields(form.true) }} {{ renderfields(form.email) }}
+      {{renderfields(form.first_name) }} {{ renderfields(form.last_name) }}
+      {{renderfields(form.home_phone) }} {% if form.mobile_phone %}
+      {{renderfields(form.mobile_phone) }} {% endif %} {% for field in
+      form.years %} {{renderfields(field) }} {% endfor %}
+      <input type="submit" value="Submit" />
+    </form>
+  </body>
+</html>
