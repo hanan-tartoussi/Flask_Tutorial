@@ -1,0 +1,19 @@
+<html>
+  <header>
+    <title>Flask Login Form</title>
+  </header>
+  <body>
+    <h1>Login HERE</h1>
+    <form action="/login" method="POST">
+      Username: <input type="text" name="username" /> Submit
+      <input type="submit" value="Login" />
+    </form>
+    {% with messages= get_flashed_messages() %} {% if messages %}
+    <ul class="flashes">
+      {% for msg in messages %}
+      <li>{{ msg }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %} {% endwith %}
+  </body>
+</html>

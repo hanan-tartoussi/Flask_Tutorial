@@ -1,3 +1,5 @@
+app.app_context().push()
+
 Without queries:
 
 To insert data into the database:
